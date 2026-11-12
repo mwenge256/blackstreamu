@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BLACK STREAM</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Verdana,sans-serif}
+:root{
+  --primary:#e50914;--primary-dark:#b20710;--secondary:#0a0a0a;--text:#fff;--text-secondary:#a8a8a8;
+  --card-bg:#161616;--hover-bg:#222;--border:#262626;--accent:#ff2d3f;
+}
+html{scroll-behavior:smooth}
+body{background:var(--secondary);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.hidden{display:none !important}
+
+header{position:fixed;top:0;width:100%;padding:18px 60px;display:flex;justify-content:space-between;align-items:center;z-index:1000;transition:background .3s,backdrop-filter .3s;background:linear-gradient(to bottom,rgba(0,0,0,.95),transparent)}
+header.scrolled{background-color:rgba(10,10,10,.96);backdrop-filter:blur(12px);padding:12px 60px;border-bottom:1px solid var(--border)}
+.header-left{display:flex;align-items:center}
+.logo{font-size:24px;font-weight:900;letter-spacing:3px;cursor:pointer;display:flex;align-items:center;gap:2px;text-transform:uppercase}
+.logo .black{color:var(--text);text-shadow:0 0 20px rgba(255,255,255,.15)}
+.logo .stream{color:var(--primary);text-shadow:0 0 18px rgba(229,9,20,.5)}
+.logo::before{content:'';display:inline-block;width:8px;height:24px;background:var(--primary);margin-right:10px;border-radius:1px;box-shadow:0 0 14px rgba(229,9,20,.8);animation:pulseGlow 2.5s ease-in-out infinite}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 14px rgba(229,9,20,.8)}50%{box-shadow:0 0 22px rgba(229,9,20,1)}}
+nav{display:flex;gap:26px;margin-left:36px}
+nav a{color:var(--text-secondary);text-decoration:none;font-size:13px;letter-spacing:.5px;font-weight:500;transition:color .3s;position:relative}
+nav a:hover,nav a.active{color:var(--text)}
+nav a.active::after{content:'';position:absolute;bottom:-6px;left:0;width:100%;height:2px;background:var(--primary);border-radius:1px}
+.header-right{display:flex;align-items:center;gap:20px}
+.search-box{display:flex;align-items:center;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:4px;padding:8px 12px;transition:all .3s}
+.search-box:focus-within{border-color:var(--primary);background:rgba(255,255,255,.07)}
+.search-box input{background:none;border:none;color:var(--text);outline:none;width:170px;font-size:13px}
+.search-box input::placeholder{color:var(--text-secondary)}
+.search-box i{color:var(--text-secondary);margin-right:8px;font-size:13px}
+
+.btn-auth{padding:9px 20px;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;gap:8px;letter-spacing:.3px}
+.btn-login{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35)}
+.btn-login:hover{background:rgba(255,255,255,.08);border-color:#fff}
+.btn-admin{background:var(--primary);color:#fff;box-shadow:0 0 18px rgba(229,9,20,.3)}
+.btn-admin:hover{background:var(--accent);transform:translateY(-1px);box-shadow:0 0 24px rgba(229,9,20,.5)}
+.btn-logout{background:transparent;color:var(--text-secondary);border:1px solid var(--border);font-size:13px;padding:7px 12px}
+.btn-logout:hover{color:#fff;border-color:#fff}
+.user-chip{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);padding:6px 12px;background:rgba(255,255,255,.05);border-radius:20px;border:1px solid var(--border)}
+.user-chip i{color:var(--primary)}
+
+.hero{height:82vh;position:relative;background:linear-gradient(to right,rgba(0,0,0,.95),rgba(0,0,0,.45) 50%,rgba(0,0,0,.95)),url('') center/cover;background-size:cover;display:flex;align-items:center;padding:0 60px;overflow:hidden}
+.hero::before{content:'';position:absolute;bottom:0;left:0;right:0;height:180px;background:linear-gradient(to top,var(--secondary),transparent);pointer-events:none}
+.hero-content{max-width:600px;padding-top:80px;position:relative;z-index:2}
+.hero-badge{display:inline-block;background:var(--primary);padding:4px 12px;border-radius:3px;font-size:11px;font-weight:800;margin-bottom:18px;letter-spacing:2px;text-transform:uppercase;box-shadow:0 0 20px rgba(229,9,20,.4)}
+.hero h1{font-size:58px;font-weight:900;line-height:1.05;margin-bottom:18px;text-shadow:2px 2px 12px rgba(0,0,0,.7);letter-spacing:-1px}
+.hero-meta{display:flex;gap:18px;align-items:center;margin-bottom:18px;color:var(--text-secondary);font-size:13px;flex-wrap:wrap}
+.hero-meta .rating{color:#f5c518;font-weight:700}
+.hero-description{font-size:15px;line-height:1.65;color:#ccc;margin-bottom:26px;max-width:540px}
+.hero-buttons{display:flex;gap:14px;flex-wrap:wrap}
+.btn{padding:12px 26px;border:none;border-radius:4px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .25s;letter-spacing:.3px}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 0 24px rgba(229,9,20,.35)}
+.btn-primary:hover{background:var(--accent);transform:scale(1.04);box-shadow:0 0 32px rgba(229,9,20,.55)}
+.btn-secondary{background:rgba(109,109,110,.55);color:#fff;backdrop-filter:blur(6px)}
+.btn-secondary:hover{background:rgba(109,109,110,.85);transform:scale(1.04)}
+
+.container{padding:40px 60px;margin-top:-90px;position:relative;z-index:10}
+.section{margin-bottom:48px}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.section-title{font-size:21px;font-weight:800;letter-spacing:.5px;position:relative;padding-left:14px}
+.section-title::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:4px;height:20px;background:var(--primary);border-radius:2px;box-shadow:0 0 12px rgba(229,9,20,.6)}
+.section-link{color:var(--text-secondary);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px;transition:color .3s;cursor:pointer;background:none;border:none;font-weight:600}
+.section-link:hover{color:var(--primary)}
+
+.row-wrapper{position:relative}
+.movie-row{display:flex;gap:14px;overflow-x:auto;padding:8px 0 18px;scroll-behavior:smooth;scrollbar-width:none}
+.movie-row::-webkit-scrollbar{display:none}
+.movie-card{flex:0 0 200px;cursor:pointer;transition:transform .3s;position:relative}
+.movie-card:hover{transform:scale(1.06);z-index:5}
+.movie-poster{width:100%;aspect-ratio:2/3;border-radius:6px;overflow:hidden;position:relative;background:var(--card-bg);box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.movie-poster img{width:100%;height:100%;object-fit:cover;transition:filter .3s;display:block}
+.movie-card:hover .movie-poster img{filter:brightness(.65)}
+.movie-card:hover .movie-poster{box-shadow:0 8px 30px rgba(229,9,20,.35)}
+.type-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.85);color:#fff;font-size:9px;font-weight:800;padding:3px 8px;border-radius:3px;letter-spacing:1px;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.1)}
+.type-badge.tv{background:rgba(229,9,20,.85);border-color:rgba(255,255,255,.2)}
+.type-badge.music{background:rgba(34,197,94,.85)}
+.movie-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}
+.movie-card:hover .movie-overlay{opacity:1}
+.play-btn{width:56px;height:56px;border-radius:50%;background:rgba(229,9,20,.95);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;box-shadow:0 0 24px rgba(229,9,20,.7)}
+.play-btn i{color:#fff;font-size:22px;margin-left:3px}
+.movie-info{padding:10px 4px 4px}
+.movie-title{font-size:14px;font-weight:600;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.movie-details{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-secondary)}
+.movie-rating{display:flex;align-items:center;gap:4px;color:#f5c518}
+.movie-card.music .movie-poster{aspect-ratio:1/1}
+
+.movie-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:24px}
+.empty-state{grid-column:1/-1;text-align:center;padding:50px 20px;color:var(--text-secondary)}
+.empty-state i{font-size:48px;margin-bottom:16px;opacity:.4;display:block}
+
+.scroll-btn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:80px;background:rgba(10,10,10,.85);border:none;color:#fff;cursor:pointer;z-index:5;font-size:18px;transition:all .3s;display:flex;align-items:center;justify-content:center;border-radius:4px;backdrop-filter:blur(8px)}
+.scroll-btn:hover{background:var(--primary);box-shadow:0 0 20px rgba(229,9,20,.5)}
+.scroll-btn.left{left:-10px}
+.scroll-btn.right{right:-10px}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px;backdrop-filter:blur(6px)}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card-bg);border-radius:12px;max-width:900px;width:100%;max-height:90vh;overflow-y:auto;position:relative;animation:modalIn .3s ease;border:1px solid var(--border)}
+@keyframes modalIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+.modal-close{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.8);border:none;color:#fff;font-size:16px;cursor:pointer;z-index:10;transition:background .3s}
+.modal-close:hover{background:var(--primary)}
+.modal-hero{position:relative;height:380px;background-size:cover;background-position:center;border-radius:12px 12px 0 0}
+.modal-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--card-bg),transparent 65%);border-radius:12px 12px 0 0}
+.modal-play{position:absolute;bottom:24px;left:24px;z-index:2}
+.modal-body{padding:28px}
+.modal-body h2{font-size:30px;margin-bottom:14px;letter-spacing:-.5px}
+.modal-meta{display:flex;gap:18px;align-items:center;margin-bottom:18px;color:var(--text-secondary);font-size:14px;flex-wrap:wrap}
+.modal-meta .rating{color:#f5c518;font-weight:700}
+.modal-description{line-height:1.7;color:#ccc;margin-bottom:22px}
+.modal-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-icon{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s}
+.btn-icon:hover{background:rgba(255,255,255,.16);border-color:#fff}
+.btn-icon.active{background:var(--primary);border-color:var(--primary);box-shadow:0 0 16px rgba(229,9,20,.5)}
+
+.login-card{background:var(--card-bg);border-radius:12px;max-width:420px;width:100%;padding:36px;position:relative;animation:modalIn .3s ease;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.login-card h2{font-size:24px;margin-bottom:8px;letter-spacing:-.5px}
+.login-card h2 .accent{color:var(--primary)}
+.login-card p{color:var(--text-secondary);font-size:13px;margin-bottom:22px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:12px;color:var(--text-secondary);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 13px;background:#0a0a0a;border:1px solid var(--border);border-radius:6px;color:#fff;font-size:14px;outline:none;transition:border-color .25s;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(229,9,20,.15)}
+.form-error{color:#ff6b6b;font-size:13px;margin-top:6px;min-height:18px}
+
+.admin-page{padding:100px 60px 60px;min-height:100vh}
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:14px}
+.admin-header h1{font-size:28px;letter-spacing:-.5px}
+.admin-header h1 .accent{color:var(--primary)}
+.admin-header p{color:var(--text-secondary);font-size:13px;margin-top:4px}
+.admin-tabs{display:flex;gap:8px;margin-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.admin-tab{padding:10px 18px;background:none;border:none;color:var(--text-secondary);font-size:13px;font-weight:700;cursor:pointer;border-bottom:2px solid transparent;transition:all .25s;letter-spacing:.5px;text-transform:uppercase}
+.admin-tab:hover{color:#fff}
+.admin-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:18px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--primary);box-shadow:0 0 16px rgba(229,9,20,.5)}
+.stat-card .label{font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:700}
+.stat-card .value{font-size:26px;font-weight:900;color:var(--text)}
+.admin-table-wrap{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:700px}
+th,td{padding:12px 16px;text-align:left;font-size:13px;border-bottom:1px solid var(--border)}
+th{background:#0f0f0f;color:var(--text-secondary);font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:800}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(229,9,20,.03)}
+.table-poster{width:40px;height:56px;object-fit:cover;border-radius:4px;background:#000}
+.table-actions{display:flex;gap:8px}
+.icon-btn{width:32px;height:32px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .2s;font-size:12px}
+.icon-btn:hover{color:#fff;border-color:#fff}
+.icon-btn.danger:hover{background:var(--primary);border-color:var(--primary);color:#fff}
+.badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:10px;font-weight:800;letter-spacing:.5px}
+.badge.movie{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.badge.tv{background:rgba(229,9,20,.15);color:#ff6b7a;border:1px solid rgba(229,9,20,.35)}
+.badge.music{background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+
+.form-modal{background:var(--card-bg);border-radius:12px;max-width:560px;width:100%;max-height:92vh;overflow-y:auto;padding:30px;position:relative;animation:modalIn .3s ease;border:1px solid var(--border)}
+.form-modal h2{font-size:22px;margin-bottom:20px;letter-spacing:-.5px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:22px;padding-top:18px;border-top:1px solid var(--border)}
+
+.media-box{border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:16px;background:#101010}
+.media-box>label{display:block;font-size:12px;color:var(--text-secondary);margin-bottom:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.src-toggle{display:flex;gap:6px;margin-bottom:12px}
+.src-toggle button{flex:1;padding:8px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-secondary);font-size:12px;font-weight:700;cursor:pointer}
+.src-toggle button.active{border-color:var(--primary);color:#fff;background:rgba(229,9,20,.12)}
+.dropzone{border:2px dashed #333;border-radius:8px;padding:26px 14px;text-align:center;color:var(--text-secondary);font-size:13px;cursor:pointer;transition:all .2s}
+.dropzone:hover,.dropzone.drag{border-color:var(--primary);background:rgba(229,9,20,.06);color:#fff}
+.dropzone i{font-size:28px;display:block;margin-bottom:8px;color:var(--primary)}
+.dropzone small{display:block;margin-top:4px;opacity:.7}
+.file-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#0a0a0a;border:1px solid var(--border);border-radius:6px;font-size:13px;margin-top:10px}
+.file-chip i{color:var(--primary)}
+.file-chip .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-chip .sz{color:var(--text-secondary);font-size:12px}
+.file-chip button{background:none;border:none;color:var(--text-secondary);cursor:pointer}
+.file-chip button:hover{color:#ff6b6b}
+.progress{height:4px;background:#222;border-radius:2px;overflow:hidden;margin-top:6px;display:none}
+.progress.on{display:block}
+.progress div{height:100%;width:40%;background:var(--primary);animation:slide 1s infinite linear}
+@keyframes slide{from{margin-left:-40%}to{margin-left:100%}}
+.media-tag{font-size:11px;color:var(--text-secondary)}
+.media-tag.ok{color:#4ade80}
+.video-modal{max-width:1000px;background:#000}
+.video-modal video{width:100%;max-height:80vh;display:block;border-radius:12px 12px 0 0;background:#000}
+.video-modal .vt{padding:12px 18px;font-weight:700}
+.audio-bar{position:fixed;left:0;right:0;bottom:0;background:rgba(14,14,14,.97);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:16px;z-index:1500;transform:translateY(110%);transition:transform .3s}
+.audio-bar.show{transform:none}
+body.has-player{padding-bottom:76px}
+.audio-bar img{width:46px;height:46px;border-radius:4px;object-fit:cover;background:#222}
+.audio-bar .meta{min-width:130px;max-width:220px}
+.audio-bar .meta b,.audio-bar .meta span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.audio-bar .meta span{font-size:12px;color:var(--text-secondary)}
+.audio-bar .ctl{display:flex;gap:8px}
+.audio-bar input[type=range]{flex:1;accent-color:var(--primary);min-width:60px}
+.audio-bar .tm{font-size:12px;color:var(--text-secondary);min-width:84px;text-align:right}
+@media(max-width:600px){.audio-bar .meta,.audio-bar .tm{display:none}.audio-bar{padding:10px 12px}}
+
+footer{padding:50px 60px;border-top:1px solid var(--border);color:var(--text-secondary);font-size:13px;background:#070707}
+.footer-content{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:26px;margin-bottom:26px}
+.footer-col h4{color:var(--text);margin-bottom:12px;font-size:13px;letter-spacing:.5px;text-transform:uppercase}
+.footer-col a{display:block;color:var(--text-secondary);text-decoration:none;margin-bottom:8px;font-size:12px;transition:color .3s}
+.footer-col a:hover{color:var(--primary)}
+.footer-bottom{text-align:center;padding-top:24px;border-top:1px solid var(--border);font-size:11px;color:#666}
+
+.toast{position:fixed;bottom:24px;right:24px;background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--primary);padding:14px 20px;border-radius:8px;color:#fff;font-size:13px;z-index:3000;box-shadow:0 8px 30px rgba(0,0,0,.6);transform:translateX(140%);transition:transform .3s;max-width:340px;font-weight:600}
+.toast.show{transform:translateX(0)}
+.toast.success{border-left-color:#22c55e}
+.toast.error{border-left-color:#ef4444}
+
+@media(max-width:1024px){
+  header{padding:16px 30px}header.scrolled{padding:12px 30px}
+  .container,.admin-page{padding-left:30px;padding-right:30px}
+  .hero{padding:0 30px}.hero h1{font-size:44px}nav{display:none}
+  footer{padding:40px 30px}
+}
+@media(max-width:768px){
+  .hero{height:70vh}.hero h1{font-size:34px}
+  .search-box input{width:110px}.movie-card{flex:0 0 145px}
+  .section-title{font-size:17px}.modal-hero{height:240px}
+  .modal-body{padding:20px}.modal-body h2{font-size:23px}
+  .form-row{grid-template-columns:1fr}
+  .admin-page{padding-top:90px}
+  .logo{font-size:20px;letter-spacing:2px}.logo::before{height:20px;width:6px}
+}
+@media(max-width:480px){
+  header{padding:12px}.container,.admin-page{padding:26px 14px}
+  .hero{padding:0 14px}.hero h1{font-size:26px}
+  .hero-buttons{flex-direction:column}.btn{justify-content:center}
+  .search-box{display:none}.movie-card{flex:0 0 128px}
+  .user-chip span{display:none}
+  .logo{font-size:17px;letter-spacing:1.5px}
+}
+</style>
+</head>
+<body>
+
+<header id="header">
+  <div class="header-left">
+    <div class="logo" onclick="goHome()"><span class="black">BLACK</span><span class="stream">STREAM</span></div>
+    <nav id="mainNav">
+      <a href="#" class="active" onclick="goHome();return false;">Home</a>
+      <a href="#trending" onclick="return false;">Trending</a>
+      <a href="#new" onclick="return false;">New Releases</a>
+      <a href="#music" onclick="document.getElementById('music').scrollIntoView({behavior:'smooth'});return false;">Music</a>
+      <a href="#mylist" onclick="return false;">My List</a>
+    </nav>
+  </div>
+  <div class="header-right">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Search movies, shows, music..." oninput="handleSearch(this.value)" />
+    </div>
+    <div id="authButtons">
+      <button class="btn-auth btn-login" onclick="openLogin()"><i class="fas fa-user-shield"></i> Admin</button>
+    </div>
+    <div id="userMenu" class="hidden" style="display:flex;align-items:center;gap:12px;">
+      <span class="user-chip"><i class="fas fa-user-shield"></i><span id="userLabel">Admin</span></span>
+      <button class="btn-auth btn-admin" onclick="openAdmin()"><i class="fas fa-sliders-h"></i> Dashboard</button>
+      <button class="btn-auth btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </div>
+</header>
+
+<div id="userView">
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <span class="hero-badge">Featured</span>
+      <h1 id="heroTitle">Nothing here yet</h1>
+      <div class="hero-meta">
+        <span class="rating"><i class="fas fa-star"></i> <span id="heroRating">—</span></span>
+        <span id="heroYear"></span>
+        <span><i class="fas fa-clock"></i> <span id="heroDuration">—</span></span>
+        <span id="heroGenre"></span>
+      </div>
+      <p class="hero-description" id="heroDesc">Sign in as admin to upload your first movie, show, or track.</p>
+      <div class="hero-buttons">
+        <button class="btn btn-primary" onclick="playItem(heroMovieId)" id="heroPlayBtn" style="display:none"><i class="fas fa-play"></i> Play Now</button>
+        <button class="btn btn-secondary" onclick="openDetails(heroMovieId)" id="heroInfoBtn" style="display:none"><i class="fas fa-info-circle"></i> More Info</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <section class="section" id="trending">
+      <div class="section-header"><h2 class="section-title">Trending Now</h2>
+        <button class="section-link" onclick="scrollRow('trendingRow',1)">See All <i class="fas fa-chevron-right"></i></button>
+      </div>
+      <div class="row-wrapper">
+        <button class="scroll-btn left" onclick="scrollRow('trendingRow',-1)"><i class="fas fa-chevron-left"></i></button>
+        <div class="movie-row" id="trendingRow"></div>
+        <button class="scroll-btn right" onclick="scrollRow('trendingRow',1)"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </section>
+
+    <section class="section" id="new">
+      <div class="section-header"><h2 class="section-title">New Releases</h2>
+        <button class="section-link" onclick="scrollRow('newRow',1)">See All <i class="fas fa-chevron-right"></i></button>
+      </div>
+      <div class="row-wrapper">
+        <button class="scroll-btn left" onclick="scrollRow('newRow',-1)"><i class="fas fa-chevron-left"></i></button>
+        <div class="movie-row" id="newRow"></div>
+        <button class="scroll-btn right" onclick="scrollRow('newRow',1)"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><h2 class="section-title">TV Shows</h2></div>
+      <div class="row-wrapper">
+        <button class="scroll-btn left" onclick="scrollRow('tvRow',-1)"><i class="fas fa-chevron-left"></i></button>
+        <div class="movie-row" id="tvRow"></div>
+        <button class="scroll-btn right" onclick="scrollRow('tvRow',1)"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </section>
+
+    <section class="section" id="music">
+      <div class="section-header"><h2 class="section-title">Music</h2></div>
+      <div class="row-wrapper">
+        <button class="scroll-btn left" onclick="scrollRow('musicRow',-1)"><i class="fas fa-chevron-left"></i></button>
+        <div class="movie-row" id="musicRow"></div>
+        <button class="scroll-btn right" onclick="scrollRow('musicRow',1)"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </section>
+
+    <section class="section" id="mylist">
+      <div class="section-header"><h2 class="section-title">My List</h2></div>
+      <div class="movie-grid" id="myListGrid"></div>
+    </section>
+
+    <section class="section hidden" id="searchResults">
+      <div class="section-header"><h2 class="section-title">Search Results</h2>
+        <span id="searchCount" style="color:var(--text-secondary);font-size:13px;"></span>
+      </div>
+      <div class="movie-grid" id="searchGrid"></div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-col"><h4>Black Stream</h4><a href="#">About</a><a href="#">Careers</a><a href="#">Press</a></div>
+      <div class="footer-col"><h4>Browse</h4><a href="#">Movies</a><a href="#">TV Shows</a><a href="#">New Releases</a></div>
+      <div class="footer-col"><h4>Support</h4><a href="#">Help Center</a><a href="#">Contact</a><a href="#">Terms</a></div>
+      <div class="footer-col"><h4>Follow</h4><a href="#"><i class="fab fa-facebook"></i> Facebook</a><a href="#"><i class="fab fa-twitter"></i> Twitter</a></div>
+    </div>
+    <div class="footer-bottom">&copy; 2024 BLACK STREAM. All rights reserved.</div>
+  </footer>
+</div>
+
+<div id="adminView" class="admin-page hidden">
+  <div class="admin-header">
+    <div>
+      <h1>BLACK <span class="accent">STREAM</span> Dashboard</h1>
+      <p>Manage your catalog and media library</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-secondary" onclick="goHome()"><i class="fas fa-arrow-left"></i> Back to Site</button>
+      <button class="btn btn-primary" onclick="openForm()"><i class="fas fa-cloud-upload-alt"></i> Upload Media</button>
+    </div>
+  </div>
+
+  <div class="admin-stats">
+    <div class="stat-card"><div class="label">Total Titles</div><div class="value" id="statTotal">0</div></div>
+    <div class="stat-card"><div class="label">Movies</div><div class="value" id="statMovies">0</div></div>
+    <div class="stat-card"><div class="label">TV Shows</div><div class="value" id="statShows">0</div></div>
+    <div class="stat-card"><div class="label">Music Tracks</div><div class="value" id="statMusic">0</div></div>
+    <div class="stat-card"><div class="label">Avg Rating</div><div class="value" id="statRating">0</div></div>
+    <div class="stat-card"><div class="label">Uploaded Storage</div><div class="value" id="statStorage">0</div></div>
+  </div>
+
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="switchTab('all',this)">All</button>
+    <button class="admin-tab" onclick="switchTab('movie',this)">Movies</button>
+    <button class="admin-tab" onclick="switchTab('tv',this)">TV Shows</button>
+    <button class="admin-tab" onclick="switchTab('music',this)">Music</button>
+  </div>
+
+  <div class="admin-table-wrap">
+    <table>
+      <thead><tr><th>Poster</th><th>Title</th><th>Type</th><th>Year</th><th>Genre</th><th>Rating</th><th>Media</th><th style="text-align:right">Actions</th></tr></thead>
+      <tbody id="adminTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" id="detailsOverlay" onclick="closeOnOverlay(event,'detailsOverlay')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeDetails()"><i class="fas fa-times"></i></button>
+    <div class="modal-hero" id="modalHero">
+      <div class="modal-play"><button class="btn btn-primary" onclick="playItem(currentDetailsId)"><i class="fas fa-play"></i> Play</button></div>
+    </div>
+    <div class="modal-body">
+      <h2 id="modalTitle"></h2>
+      <div class="modal-meta">
+        <span class="rating"><i class="fas fa-star"></i> <span id="modalRating"></span></span>
+        <span id="modalYear"></span><span id="modalDuration"></span>
+        <span id="modalGenre"></span><span id="modalType"></span>
+      </div>
+      <p class="modal-description" id="modalDesc"></p>
+      <div class="modal-actions">
+        <button class="btn-icon" id="modalListBtn" onclick="toggleMyList()"><i class="fas fa-plus"></i></button>
+        <button class="btn-icon" onclick="toast('Liked!','success')"><i class="fas fa-thumbs-up"></i></button>
+        <button class="btn-icon" onclick="copyShareLink()"><i class="fas fa-share"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="loginOverlay" onclick="closeOnOverlay(event,'loginOverlay')">
+  <div class="login-card" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeLogin()"><i class="fas fa-times"></i></button>
+    <h2>BLACK <span class="accent">STREAM</span></h2>
+    <p id="loginSubtitle">Admin sign in.</p>
+    <form onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="loginUser">Username</label>
+        <input id="loginUser" type="text" placeholder="admin" autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <label for="loginPass">Password</label>
+        <input id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password" />
+      </div>
+      <div class="form-group hidden" id="confirmGroup">
+        <label for="loginPass2">Confirm Password</label>
+        <input id="loginPass2" type="password" placeholder="••••••••" autocomplete="new-password" />
+      </div>
+      <div class="form-error" id="loginError"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:6px;" id="loginBtn">
+        <i class="fas fa-sign-in-alt"></i> Sign In
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="formOverlay" onclick="closeOnOverlay(event,'formOverlay')">
+  <div class="form-modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeForm()"><i class="fas fa-times"></i></button>
+    <h2 id="formTitle">Upload Media</h2>
+    <form onsubmit="saveItem(event)">
+      <input type="hidden" id="f_id" />
+      <div class="form-row">
+        <div class="form-group"><label>Title *</label><input id="f_title" type="text" required placeholder="Title" /></div>
+        <div class="form-group"><label>Category *</label>
+          <select id="f_type" required onchange="syncType()">
+            <option value="movie">Movie</option><option value="tv">TV Show</option><option value="music">Music</option>
+          </select></div>
+      </div>
+      <div class="media-box">
+        <label>Media file</label>
+        <div class="src-toggle">
+          <button type="button" id="srcDevice" class="active" onclick="setSource('device')"><i class="fas fa-laptop"></i> Upload from device</button>
+          <button type="button" id="srcUrl" onclick="setSource('url')"><i class="fas fa-link"></i> Web link</button>
+        </div>
+        <div id="srcDeviceBox">
+          <div class="dropzone" id="dropzone" onclick="document.getElementById('f_file').click()">
+            <i class="fas fa-cloud-upload-alt"></i>Drop an <b>.mp4</b> (movie / show) or <b>.mp3</b> (music) here, or click to browse
+            <small>Stored locally in this browser</small>
+          </div>
+          <input id="f_file" type="file" accept=".mp3,.mp4,audio/mpeg,video/mp4" class="hidden" onchange="pickFile(this.files[0])" />
+        </div>
+        <div id="srcUrlBox" class="hidden">
+          <input id="f_mediaUrl" type="url" placeholder="https://…/movie.mp4  or  https://…/song.mp3 (direct link)" style="width:100%;padding:11px 13px;background:#0a0a0a;border:1px solid var(--border);border-radius:6px;color:#fff;font-size:14px;outline:none" />
+        </div>
+        <div id="fileChip" class="file-chip hidden"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Release Year *</label><input id="f_year" type="number" required min="1900" max="2100" placeholder="2024" /></div>
+        <div class="form-group" id="g_rating"><label>Rating (0–10) *</label><input id="f_rating" type="number" required min="0" max="10" step="0.1" placeholder="7.5" /></div>
+        <div class="form-group hidden" id="g_artist"><label>Artist *</label><input id="f_artist" type="text" placeholder="Artist name" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Duration *</label><input id="f_duration" type="text" required placeholder="auto-filled" /></div>
+        <div class="form-group"><label>Genre *</label><input id="f_genre" type="text" required placeholder="Action • Sci-Fi" /></div>
+      </div>
+      <div class="form-group"><label>Poster / Cover image</label>
+        <input id="f_poster" type="url" placeholder="https://… (optional)" />
+        <input id="f_posterFile" type="file" accept="image/*" style="margin-top:8px;padding:8px" onchange="pickPoster(this.files[0])" />
+        <div class="media-tag" style="margin-top:6px">Leave empty to auto-generate one.</div>
+      </div>
+      <div class="form-group" id="g_backdrop"><label>Backdrop URL</label><input id="f_backdrop" type="url" placeholder="https://... (optional)" /></div>
+      <div class="form-group"><label>Description</label><textarea id="f_description" rows="3" placeholder="Short synopsis..."></textarea></div>
+      <div class="progress" id="saveProg"><div></div></div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeForm()">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="saveBtn"><i class="fas fa-save"></i> Save &amp; Publish</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="videoOverlay" style="z-index:2500" onclick="if(event.target===this)closeVideo()">
+  <div class="modal video-modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeVideo()"><i class="fas fa-times"></i></button>
+    <video id="videoEl" controls playsinline></video>
+    <div class="vt" id="videoTitle"></div>
+  </div>
+</div>
+
+<div class="audio-bar" id="audioBar">
+  <img id="apCover" alt="" />
+  <div class="meta"><b id="apTitle"></b><span id="apArtist"></span></div>
+  <div class="ctl">
+    <button class="btn-icon" onclick="nextTrack(-1)"><i class="fas fa-backward-step"></i></button>
+    <button class="btn-icon active" id="apBtn" onclick="togglePlay()"><i class="fas fa-pause"></i></button>
+    <button class="btn-icon" onclick="nextTrack(1)"><i class="fas fa-forward-step"></i></button>
+  </div>
+  <input type="range" id="apSeek" min="0" max="100" value="0" step="0.1" oninput="seekTo(this.value)" />
+  <span class="tm" id="apTime">0:00 / 0:00</span>
+  <button class="btn-icon" title="Close" onclick="stopTrack()"><i class="fas fa-times"></i></button>
+  <audio id="audioEl"></audio>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   CONFIG
+============================================================ */
+const CATALOG_KEY = 'blackstream_catalog_v2';
+const MYLIST_KEY  = 'blackstream_mylist_v2';
+const SESSION_KEY = 'blackstream_session_v2';
+const ADMIN_KEY   = 'blackstream_admin_v2';
+
+let catalog = [];
+let myList  = [];
+let currentUser = null;
+let currentDetailsId = null;
+let heroMovieId = null;
+let activeTabFilter = 'all';
+let adminRecord = null;
+
+/* ============================================================
+   PERSISTENCE
+============================================================ */
+function loadData(){
+  try{
+    catalog = JSON.parse(localStorage.getItem(CATALOG_KEY) || '[]');
+    myList  = JSON.parse(localStorage.getItem(MYLIST_KEY)  || '[]');
+    adminRecord = JSON.parse(localStorage.getItem(ADMIN_KEY) || 'null');
+    const s = localStorage.getItem(SESSION_KEY);
+    if(s) currentUser = JSON.parse(s);
+  }catch(e){ catalog=[]; myList=[]; adminRecord=null; }
+}
+const saveCatalog = () => localStorage.setItem(CATALOG_KEY, JSON.stringify(catalog));
+const saveMyList  = () => localStorage.setItem(MYLIST_KEY,  JSON.stringify(myList));
+const saveAdmin   = () => localStorage.setItem(ADMIN_KEY,   JSON.stringify(adminRecord));
+
+/* ============================================================
+   CRYPTO (SHA-256 password hashing)
+============================================================ */
+async function sha256(str){
+  const buf = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2,'0')).join('');
+}
+async function makeAdmin(username, password){
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const saltHex = [...salt].map(b=>b.toString(16).padStart(2,'0')).join('');
+  const hash = await sha256(saltHex + password);
+  return { username, salt: saltHex, hash };
+}
+async function verifyAdmin(username, password){
+  if(!adminRecord) return false;
+  if(adminRecord.username !== username) return false;
+  const hash = await sha256(adminRecord.salt + password);
+  return hash === adminRecord.hash;
+}
+
+/* ============================================================
+   RENDERING
+============================================================ */
+function renderAll(){
+  renderHero();
+  renderUserRows();
+  renderMyList();
+  if(currentUser) renderAdminTable();
+  updateAuthUI();
+}
+
+function renderHero(){
+  const featured = catalog.find(m => m.type !== 'music') || catalog[0];
+  const playBtn = document.getElementById('heroPlayBtn');
+  const infoBtn = document.getElementById('heroInfoBtn');
+  if(!featured){
+    document.getElementById('heroTitle').textContent = 'Nothing here yet';
+    document.getElementById('heroRating').textContent = '—';
+    document.getElementById('heroYear').textContent = '';
+    document.getElementById('heroDuration').textContent = '—';
+    document.getElementById('heroGenre').textContent = '';
+    document.getElementById('heroDesc').textContent = 'Sign in as admin to upload your first movie, show, or track.';
+    playBtn.style.display = 'none';
+    infoBtn.style.display = 'none';
+    document.getElementById('hero').style.background =
+      `linear-gradient(to right,rgba(0,0,0,.95),rgba(0,0,0,.45) 50%,rgba(0,0,0,.95)), url('') center/cover`;
+    return;
+  }
+  heroMovieId = featured.id;
+  document.getElementById('heroTitle').textContent = featured.title;
+  document.getElementById('heroRating').textContent = (featured.rating||0).toFixed(1);
+  document.getElementById('heroYear').textContent = featured.year || '';
+  document.getElementById('heroDuration').textContent = featured.duration || '';
+  document.getElementById('heroGenre').textContent = featured.genre || '';
+  document.getElementById('heroDesc').textContent = featured.description || '';
+  playBtn.style.display = '';
+  infoBtn.style.display = '';
+  const bg = featured.backdrop || featured.poster;
+  if(bg) document.getElementById('hero').style.background =
+    `linear-gradient(to right,rgba(0,0,0,.95),rgba(0,0,0,.45) 50%,rgba(0,0,0,.95)), url('${bg}') center/cover`;
+}
+
+function movieCard(item){
+  const music = item.type === 'music';
+  const badge = music ? 'MUSIC' : item.type === 'tv' ? 'TV' : 'MOVIE';
+  return `
+    <div class="movie-card ${item.type}" onclick="${music ? `playItem('${item.id}')` : `openDetails('${item.id}')`}">
+      <div class="movie-poster">
+        <span class="type-badge ${item.type}">${badge}</span>
+        <img src="${item.poster}" alt="${escapeHtml(item.title)}" loading="lazy" onerror="this.style.display='none'" />
+        <div class="movie-overlay">
+          <button class="play-btn" onclick="event.stopPropagation();playItem('${item.id}')"><i class="fas fa-play"></i></button>
+        </div>
+      </div>
+      <div class="movie-info">
+        <div class="movie-title">${escapeHtml(item.title)}</div>
+        <div class="movie-details">
+          ${music
+            ? `<span class="movie-year">${escapeHtml(item.artist||'')}</span><span>${escapeHtml(item.duration||'')}</span>`
+            : `<span class="movie-year">${item.year}</span><span class="movie-rating"><i class="fas fa-star"></i> ${(item.rating||0).toFixed(1)}</span>`}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderRow(id, items){
+  const el = document.getElementById(id);
+  el.innerHTML = items.length
+    ? items.map(movieCard).join('')
+    : `<div class="empty-state" style="min-width:100%"><i class="fas fa-film"></i><p>Nothing here yet.</p></div>`;
+}
+
+function renderUserRows(){
+  const vids = catalog.filter(m => m.type !== 'music');
+  renderRow('trendingRow', [...vids].sort((a,b)=>(b.rating||0)-(a.rating||0)).slice(0,10));
+  renderRow('newRow', [...vids].sort((a,b)=>(b.year||0)-(a.year||0)).slice(0,10));
+  renderRow('tvRow', catalog.filter(m=>m.type==='tv'));
+  renderRow('musicRow', catalog.filter(m=>m.type==='music'));
+}
+
+function renderMyList(){
+  const grid = document.getElementById('myListGrid');
+  const items = catalog.filter(m => myList.includes(m.id));
+  grid.innerHTML = items.length
+    ? items.map(movieCard).join('')
+    : `<div class="empty-state"><i class="fas fa-bookmark"></i><p>Your list is empty. Add titles from details pages.</p></div>`;
+}
+
+/* ============================================================
+   SEARCH
+============================================================ */
+function handleSearch(q){
+  const section = document.getElementById('searchResults');
+  const term = q.trim().toLowerCase();
+  if(!term){ section.classList.add('hidden'); return; }
+  const matches = catalog.filter(m =>
+    (m.title||'').toLowerCase().includes(term) ||
+    (m.genre||'').toLowerCase().includes(term) ||
+    (m.artist||'').toLowerCase().includes(term) ||
+    String(m.year||'').includes(term)
+  );
+  document.getElementById('searchCount').textContent =
+    `${matches.length} result${matches.length !== 1 ? 's' : ''}`;
+  document.getElementById('searchGrid').innerHTML = matches.length
+    ? matches.map(movieCard).join('')
+    : `<div class="empty-state"><i class="fas fa-search"></i><p>No titles match "${escapeHtml(q)}"</p></div>`;
+  section.classList.remove('hidden');
+  section.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ============================================================
+   DETAILS
+============================================================ */
+function openDetails(id){
+  const item = catalog.find(m => m.id === id);
+  if(!item) return;
+  currentDetailsId = id;
+  document.getElementById('modalHero').style.backgroundImage =
+    `linear-gradient(to top,var(--card-bg),transparent 65%), url('${item.backdrop || item.poster}')`;
+  document.getElementById('modalTitle').textContent = item.title;
+  document.getElementById('modalRating').textContent = (item.rating||0).toFixed(1);
+  document.getElementById('modalYear').textContent = item.year;
+  document.getElementById('modalDuration').textContent = item.duration;
+  document.getElementById('modalGenre').textContent = item.genre;
+  document.getElementById('modalType').textContent = item.type === 'tv' ? 'TV Show' : 'Movie';
+  document.getElementById('modalDesc').textContent = item.description || '';
+  updateListBtn();
+  document.getElementById('detailsOverlay').classList.add('active');
+}
+function closeDetails(){
+  document.getElementById('detailsOverlay').classList.remove('active');
+  currentDetailsId = null;
+}
+function updateListBtn(){
+  const btn = document.getElementById('modalListBtn');
+  if(!currentDetailsId){ btn.classList.remove('active'); btn.innerHTML = '<i class="fas fa-plus"></i>'; return; }
+  const inList = myList.includes(currentDetailsId);
+  btn.classList.toggle('active', inList);
+  btn.innerHTML = inList ? '<i class="fas fa-check"></i>' : '<i class="fas fa-plus"></i>';
+  btn.title = inList ? 'Remove from list' : 'Add to list';
+}
+function toggleMyList(){
+  if(!currentDetailsId) return;
+  const idx = myList.indexOf(currentDetailsId);
+  if(idx >= 0){ myList.splice(idx,1); toast('Removed from My List'); }
+  else { myList.push(currentDetailsId); toast('Added to My List','success'); }
+  saveMyList(); updateListBtn(); renderMyList();
+}
+function copyShareLink(){
+  const url = location.origin + location.pathname + '#item=' + currentDetailsId;
+  navigator.clipboard?.writeText(url).then(()=>toast('Link copied!','success'))
+    .catch(()=>toast('Could not copy link','error'));
+}
+
+/* ============================================================
+   LOGIN
+============================================================ */
+function openLogin(){
+  const firstRun = !adminRecord;
+  document.getElementById('loginSubtitle').textContent = firstRun
+    ? 'First-time setup — create the admin account.'
+    : 'Admin sign in.';
+  document.getElementById('loginBtn').innerHTML = firstRun
+    ? '<i class="fas fa-user-plus"></i> Create Admin'
+    : '<i class="fas fa-sign-in-alt"></i> Sign In';
+  document.getElementById('confirmGroup').classList.toggle('hidden', !firstRun);
+  document.getElementById('loginError').textContent = '';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginPass2').value = '';
+  document.getElementById('loginOverlay').classList.add('active');
+  setTimeout(()=>document.getElementById('loginUser').focus(), 50);
+}
+function closeLogin(){ document.getElementById('loginOverlay').classList.remove('active'); }
+
+async function handleLogin(e){
+  e.preventDefault();
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginError');
+  if(!u || !p){ err.textContent = 'Username and password are required.'; return; }
+  if(!adminRecord){
+    const p2 = document.getElementById('loginPass2').value;
+    if(p.length < 6){ err.textContent = 'Password must be at least 6 characters.'; return; }
+    if(p !== p2){ err.textContent = 'Passwords do not match.'; return; }
+    adminRecord = await makeAdmin(u, p);
+    saveAdmin();
+    currentUser = { username: u, role: 'admin' };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(currentUser));
+    closeLogin(); updateAuthUI(); toast('Admin account created','success'); openAdmin();
+    return;
+  }
+  const ok = await verifyAdmin(u, p);
+  if(ok){
+    currentUser = { username: u, role: 'admin' };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(currentUser));
+    closeLogin(); updateAuthUI(); toast('Welcome back','success'); openAdmin();
+  } else {
+    err.textContent = 'Invalid credentials.';
+    document.getElementById('loginPass').value = '';
+  }
+}
+function logout(){
+  currentUser = null;
+  localStorage.removeItem(SESSION_KEY);
+  updateAuthUI(); goHome(); toast('Signed out');
+}
+function updateAuthUI(){
+  const a = document.getElementById('authButtons');
+  const m = document.getElementById('userMenu');
+  if(currentUser){
+    a.classList.add('hidden'); a.style.display = 'none';
+    m.classList.remove('hidden'); m.style.display = 'flex';
+    document.getElementById('userLabel').textContent = currentUser.username;
+  } else {
+    a.classList.remove('hidden'); a.style.display = 'block';
+    m.classList.add('hidden'); m.style.display = 'none';
+  }
+}
+
+/* ============================================================
+   VIEWS
+============================================================ */
+function openAdmin(){
+  if(!currentUser){ openLogin(); return; }
+  document.getElementById('userView').classList.add('hidden');
+  document.getElementById('adminView').classList.remove('hidden');
+  document.querySelector('footer').classList.add('hidden');
+  document.getElementById('mainNav').style.display = 'none';
+  renderAdminTable();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function goHome(){
+  document.getElementById('adminView').classList.add('hidden');
+  document.getElementById('userView').classList.remove('hidden');
+  document.querySelector('footer').classList.remove('hidden');
+  document.getElementById('mainNav').style.display = '';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchResults').classList.add('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ============================================================
+   ADMIN TABLE
+============================================================ */
+function renderAdminTable(){
+  const tbody = document.getElementById('adminTableBody');
+  const filtered = activeTabFilter === 'all' ? catalog : catalog.filter(m => m.type === activeTabFilter);
+  const label = {movie:'MOVIE', tv:'TV SHOW', music:'MUSIC'};
+  tbody.innerHTML = filtered.length ? filtered.map(item => {
+    const media = item.mediaId
+      ? `<span class="media-tag ok"><i class="fas ${item.mediaKind==='audio'?'fa-music':'fa-film'}"></i> ${escapeHtml(item.mediaName||'file')}<br>${fmtSize(item.mediaSize||0)}</span>`
+      : item.mediaUrl ? `<span class="media-tag ok"><i class="fas fa-link"></i> Web link</span>`
+      : `<span class="media-tag">No file</span>`;
+    return `<tr>
+      <td><img class="table-poster" src="${item.poster}" alt="" onerror="this.style.visibility='hidden'"/></td>
+      <td><b>${escapeHtml(item.title)}</b>${item.artist?`<div class="media-tag">${escapeHtml(item.artist)}</div>`:''}</td>
+      <td><span class="badge ${item.type}">${label[item.type]||'MOVIE'}</span></td>
+      <td>${item.year||'—'}</td>
+      <td>${escapeHtml(item.genre||'')}</td>
+      <td>${item.type==='music' ? '—' : '⭐ ' + (item.rating||0).toFixed(1)}</td>
+      <td>${media}</td>
+      <td><div class="table-actions" style="justify-content:flex-end">
+        <button class="icon-btn" title="Play" onclick="playItem('${item.id}')"><i class="fas fa-play"></i></button>
+        <button class="icon-btn" title="Edit" onclick="openForm('${item.id}')"><i class="fas fa-pen"></i></button>
+        <button class="icon-btn danger" title="Delete" onclick="deleteItem('${item.id}')"><i class="fas fa-trash"></i></button>
+      </div></td></tr>`;
+  }).join('')
+    : `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-secondary)">Nothing here yet. Click "Upload Media" to add something.</td></tr>`;
+
+  const $ = id => document.getElementById(id);
+  $('statTotal').textContent = catalog.length;
+  $('statMovies').textContent = catalog.filter(m=>m.type==='movie').length;
+  $('statShows').textContent = catalog.filter(m=>m.type==='tv').length;
+  $('statMusic').textContent = catalog.filter(m=>m.type==='music').length;
+  const rated = catalog.filter(m=>m.type!=='music');
+  $('statRating').textContent = (rated.length ? rated.reduce((t,m)=>t+Number(m.rating||0),0)/rated.length : 0).toFixed(1);
+  $('statStorage').textContent = fmtSize(catalog.reduce((t,m)=>t+(m.mediaSize||0),0));
+}
+
+function switchTab(tab, btn){
+  activeTabFilter = tab;
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  renderAdminTable();
+}
+
+/* ============================================================
+   INDEXEDDB MEDIA STORAGE
+============================================================ */
+let _db;
+function idb(){
+  return _db || (_db = new Promise((res,rej)=>{
+    const r = indexedDB.open('blackstream_media',1);
+    r.onupgradeneeded = () => r.result.createObjectStore('files');
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  }));
+}
+async function idbOp(mode, fn){
+  const d = await idb();
+  return new Promise((res,rej)=>{
+    const tx = d.transaction('files', mode);
+    const req = fn(tx.objectStore('files'));
+    tx.oncomplete = () => res(req && req.result);
+    tx.onerror = tx.onabort = () => rej(tx.error);
+  });
+}
+const mediaPut = (id,blob) => idbOp('readwrite', s => s.put(blob,id));
+const mediaGet = id => idbOp('readonly', s => s.get(id));
+const mediaDel = id => idbOp('readwrite', s => s.delete(id)).catch(()=>{});
+
+/* ============================================================
+   HELPERS
+============================================================ */
+const fmtSize = b => b>=1e9 ? (b/1e9).toFixed(2)+' GB' : b>=1e6 ? (b/1e6).toFixed(1)+' MB' : Math.max(0,Math.round(b/1e3))+' KB';
+const mmss = s => isFinite(s) ? Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0') : '0:00';
+function fmtDur(sec, music){
+  sec = Math.round(sec);
+  if(music) return mmss(sec);
+  const h = Math.floor(sec/3600), m = Math.round((sec%3600)/60);
+  return h ? `${h}h ${m}m` : `${m}m`;
+}
+function probeMedia(file, isVideo){
+  return new Promise(res=>{
+    const el = document.createElement(isVideo ? 'video' : 'audio');
+    const url = URL.createObjectURL(file);
+    let done = false;
+    const fin = r => { if(done) return; done = true; URL.revokeObjectURL(url); res(r); };
+    el.preload = 'metadata'; el.muted = true; el.src = url;
+    el.onloadedmetadata = () => {
+      if(!isVideo) return fin({duration: el.duration});
+      el.currentTime = Math.min(Math.max((el.duration||1)*0.1, 1), el.duration||1);
+    };
+    el.onseeked = () => {
+      try{
+        const c = document.createElement('canvas'); c.width = 400; c.height = 600;
+        const x = c.getContext('2d'); x.fillStyle = '#000'; x.fillRect(0,0,400,600);
+        const k = Math.max(400/el.videoWidth, 600/el.videoHeight), w = el.videoWidth*k, h = el.videoHeight*k;
+        x.drawImage(el,(400-w)/2,(600-h)/2,w,h);
+        fin({duration: el.duration, thumb: c.toDataURL('image/jpeg',.8)});
+      }catch(e){ fin({duration: el.duration}); }
+    };
+    el.onerror = () => fin(null);
+    setTimeout(()=>fin(null), 10000);
+  });
+}
+function genPoster(title, music){
+  const W = 400, H = music ? 400 : 600, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d'), g = x.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'#2a0509'); g.addColorStop(1,'#0a0a0a'); x.fillStyle = g; x.fillRect(0,0,W,H);
+  x.fillStyle = '#e50914'; x.fillRect(0,0,8,H);
+  x.fillStyle = '#fff'; x.font = 'bold 34px Segoe UI,sans-serif'; x.textAlign = 'center';
+  const lines = []; let line = '';
+  (title||'Untitled').split(' ').forEach(w => { if((line+' '+w).trim().length > 14){ lines.push(line.trim()); line = w; } else line += ' '+w; });
+  lines.push(line.trim());
+  lines.slice(0,4).forEach((l,i)=>x.fillText(l, W/2, H/2-20+i*42));
+  return c.toDataURL('image/jpeg',.85);
+}
+function readPoster(file){
+  return new Promise(res=>{
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const k = Math.min(1, 500/img.width), c = document.createElement('canvas');
+      c.width = img.width*k; c.height = img.height*k;
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg',.85));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); res(null); };
+    img.src = url;
+  });
+}
+
+/* ============================================================
+   UPLOAD FORM
+============================================================ */
+let pendingFile = null, pendingProbe = null, pendingPoster = null, editingItem = null, srcMode = 'device', dropMedia = false;
+const $id = k => document.getElementById(k);
+
+function setSource(m){
+  srcMode = m;
+  $id('srcDevice').classList.toggle('active', m==='device');
+  $id('srcUrl').classList.toggle('active', m==='url');
+  $id('srcDeviceBox').classList.toggle('hidden', m!=='device');
+  $id('srcUrlBox').classList.toggle('hidden', m!=='url');
+  renderChip();
+}
+function syncType(){
+  const music = $id('f_type').value === 'music';
+  $id('g_rating').classList.toggle('hidden', music);
+  $id('g_artist').classList.toggle('hidden', !music);
+  $id('g_backdrop').classList.toggle('hidden', music);
+  $id('f_rating').required = !music;
+  $id('f_artist').required = music;
+  $id('f_duration').placeholder = music ? '3:45 (auto-filled)' : '2h 15m (auto-filled)';
+}
+async function pickFile(f){
+  if(!f) return;
+  const ext = f.name.split('.').pop().toLowerCase();
+  if(!['mp3','mp4'].includes(ext)){ toast('Only .mp3 and .mp4 files are supported','error'); return; }
+  pendingFile = f; pendingProbe = null;
+  const sel = $id('f_type');
+  if(ext === 'mp3') sel.value = 'music'; else if(sel.value === 'music') sel.value = 'movie';
+  syncType();
+  if(!$id('f_title').value) $id('f_title').value = f.name.replace(/\.[^.]+$/,'').replace(/[_.]+/g,' ').trim();
+  renderChip();
+  const p = await probeMedia(f, ext === 'mp4');
+  if(pendingFile !== f) return;
+  pendingProbe = p;
+  if(!p){ toast("Browser can't preview this file. You can still save it.",'error'); return; }
+  if(!$id('f_duration').value && isFinite(p.duration)) $id('f_duration').value = fmtDur(p.duration, ext === 'mp3');
+}
+async function pickPoster(f){
+  pendingPoster = f ? await readPoster(f) : null;
+  if(f && !pendingPoster) toast('Could not read that image','error');
+}
+const chipHtml = (n,sz,aud,fn) => `<i class="fas ${aud?'fa-music':'fa-film'}"></i><span class="nm">${escapeHtml(n)}</span><span class="sz">${sz}</span><button type="button" title="Remove" onclick="${fn}"><i class="fas fa-times"></i></button>`;
+function renderChip(){
+  const chip = $id('fileChip'); let html = '';
+  if(srcMode === 'device'){
+    if(pendingFile) html = chipHtml(pendingFile.name, fmtSize(pendingFile.size), pendingFile.name.toLowerCase().endsWith('.mp3'), 'clearFile()');
+    else if(editingItem && editingItem.mediaId && !dropMedia) html = chipHtml(editingItem.mediaName||'Uploaded file', fmtSize(editingItem.mediaSize||0)+' · current', editingItem.mediaKind==='audio', 'dropCurrent()');
+  }
+  chip.innerHTML = html; chip.classList.toggle('hidden', !html);
+}
+function clearFile(){ pendingFile = null; pendingProbe = null; $id('f_file').value = ''; renderChip(); }
+function dropCurrent(){ dropMedia = true; renderChip(); }
+
+function openForm(id){
+  if(!currentUser) return openLogin();
+  editingItem = id ? catalog.find(m=>m.id===id) : null;
+  if(id && !editingItem) return;
+  document.querySelectorAll('#formOverlay form input:not([type=hidden]):not([type=file]), #formOverlay form textarea').forEach(el => el.value = '');
+  pendingFile = pendingProbe = pendingPoster = null; dropMedia = false;
+  const it = editingItem;
+  $id('formTitle').textContent = it ? 'Edit Title' : 'Upload Media';
+  $id('f_id').value = it ? it.id : '';
+  $id('f_type').value = it ? it.type : 'movie';
+  if(it){
+    $id('f_title').value = it.title || '';
+    $id('f_year').value = it.year || '';
+    $id('f_rating').value = it.rating || '';
+    $id('f_artist').value = it.artist || '';
+    $id('f_duration').value = it.duration || '';
+    $id('f_genre').value = it.genre || '';
+    $id('f_poster').value = (it.poster||'').startsWith('data:') ? '' : (it.poster||'');
+    $id('f_backdrop').value = it.backdrop || '';
+    $id('f_description').value = it.description || '';
+    $id('f_mediaUrl').value = it.mediaUrl || '';
+  }
+  syncType(); setSource(it && it.mediaUrl ? 'url' : 'device');
+  $id('formOverlay').classList.add('active');
+  setTimeout(()=>$id('f_title').focus(), 50);
+}
+function closeForm(){ $id('formOverlay').classList.remove('active'); editingItem = null; }
+
+async function saveItem(e){
+  e.preventDefault();
+  const old = editingItem, id = $id('f_id').value || 'x' + Date.now();
+  const type = $id('f_type').value, music = type === 'music';
+  const url = srcMode === 'url' ? $id('f_mediaUrl').value.trim() : '';
+  if(pendingFile && pendingFile.name.toLowerCase().endsWith('.mp3') !== music){
+    toast(music ? 'Music needs an .mp3 file' : 'Movies and shows need an .mp4 file','error'); return;
+  }
+  const btn = $id('saveBtn'); btn.disabled = true; $id('saveProg').classList.add('on');
+  try{
+    const item = {
+      id, title: $id('f_title').value.trim(), type,
+      year: parseInt($id('f_year').value,10), rating: music ? 0 : parseFloat($id('f_rating').value),
+      artist: music ? $id('f_artist').value.trim() : '',
+      duration: $id('f_duration').value.trim(),
+      genre: $id('f_genre').value.trim(),
+      backdrop: music ? '' : $id('f_backdrop').value.trim(),
+      description: $id('f_description').value.trim()
+    };
+    const keep = old && old.mediaId && !dropMedia && !pendingFile && !url;
+    if(keep) Object.assign(item, {mediaId:old.mediaId, mediaKind:old.mediaKind, mediaName:old.mediaName, mediaSize:old.mediaSize});
+    else if(pendingFile){
+      const mid = 'f' + Date.now();
+      await mediaPut(mid, pendingFile);
+      Object.assign(item, {mediaId:mid, mediaKind: music?'audio':'video', mediaName:pendingFile.name, mediaSize:pendingFile.size});
+    } else if(url){ item.mediaUrl = url; item.mediaKind = music ? 'audio' : 'video'; }
+    if(old && old.mediaId && !keep) await mediaDel(old.mediaId);
+
+    const pUrl = $id('f_poster').value.trim();
+    item.poster = pendingPoster || pUrl || (old && (old.poster||'').startsWith('data:') ? old.poster : '')
+      || (pendingProbe && pendingProbe.thumb) || genPoster(item.title, music);
+
+    const idx = catalog.findIndex(m => m.id === id);
+    if(idx >= 0){ catalog[idx] = item; toast('Changes saved','success'); }
+    else { catalog.unshift(item); toast(item.mediaId || item.mediaUrl ? 'Uploaded & published' : 'Title added','success'); }
+    saveCatalog(); closeForm(); renderAll();
+  }catch(err){
+    console.error(err); toast('Save failed: ' + ((err && err.message) || 'storage may be full'),'error');
+  }finally{
+    btn.disabled = false; $id('saveProg').classList.remove('on');
+  }
+}
+
+function deleteItem(id){
+  if(!currentUser){ openLogin(); return; }
+  const item = catalog.find(m => m.id === id);
+  if(!item) return;
+  if(!confirm(`Delete "${item.title}"${item.mediaId ? ' and its uploaded file' : ''}? This cannot be undone.`)) return;
+  if(item.mediaId) mediaDel(item.mediaId);
+  catalog = catalog.filter(m => m.id !== id);
+  myList = myList.filter(x => x !== id);
+  saveCatalog(); saveMyList(); renderAll();
+  toast('Title deleted','error');
+}
+
+/* ============================================================
+   PLAYBACK
+============================================================ */
+let videoBlob = null, audioBlob = null, queue = [], qIdx = -1;
+async function mediaSrc(item){
+  if(item.mediaUrl) return item.mediaUrl;
+  const b = item.mediaId && await mediaGet(item.mediaId);
+  return b ? URL.createObjectURL(b) : null;
+}
+async function playItem(id){
+  const item = catalog.find(m => m.id === id);
+  if(!item) return;
+  if(!item.mediaId && !item.mediaUrl){ toast(currentUser ? 'No file yet — click Edit to upload one' : 'This title has no media yet'); return; }
+  if(item.type === 'music'){
+    queue = catalog.filter(m => m.type==='music' && (m.mediaId || m.mediaUrl));
+    qIdx = queue.findIndex(m => m.id === id);
+    return loadTrack();
+  }
+  const src = await mediaSrc(item);
+  if(!src){ toast("File not found in this browser's storage",'error'); return; }
+  stopTrack(); closeVideo();
+  videoBlob = item.mediaId ? src : null;
+  const v = $id('videoEl'); v.src = src;
+  $id('videoTitle').textContent = item.title;
+  $id('videoOverlay').classList.add('active');
+  v.play().catch(()=>{});
+}
+function closeVideo(){
+  const v = $id('videoEl'); v.pause(); v.removeAttribute('src'); v.load();
+  if(videoBlob){ URL.revokeObjectURL(videoBlob); videoBlob = null; }
+  $id('videoOverlay').classList.remove('active');
+}
+async function loadTrack(){
+  const item = queue[qIdx], src = await mediaSrc(item);
+  if(!src){ toast("File not found in this browser's storage",'error'); return; }
+  const a = $id('audioEl');
+  if(audioBlob){ URL.revokeObjectURL(audioBlob); audioBlob = null; }
+  if(item.mediaId) audioBlob = src;
+  closeVideo();
+  a.src = src; a.play().catch(()=>{});
+  $id('apCover').src = item.poster; $id('apTitle').textContent = item.title; $id('apArtist').textContent = item.artist || '';
+  $id('audioBar').classList.add('show'); document.body.classList.add('has-player');
+}
+function togglePlay(){ const a = $id('audioEl'); a.paused ? a.play() : a.pause(); }
+function nextTrack(d){ if(!queue.length) return; qIdx = (qIdx + d + queue.length) % queue.length; loadTrack(); }
+function seekTo(v){ const a = $id('audioEl'); if(isFinite(a.duration)) a.currentTime = a.duration * v / 100; }
+function stopTrack(){
+  const a = $id('audioEl'); a.pause(); a.removeAttribute('src'); a.load();
+  if(audioBlob){ URL.revokeObjectURL(audioBlob); audioBlob = null; }
+  $id('audioBar').classList.remove('show'); document.body.classList.remove('has-player');
+}
+function initMedia(){
+  const a = $id('audioEl'), ic = n => $id('apBtn').innerHTML = `<i class="fas fa-${n}"></i>`;
+  a.addEventListener('play', ()=>ic('pause'));
+  a.addEventListener('pause', ()=>ic('play'));
+  a.addEventListener('ended', ()=>{ queue.length > 1 ? nextTrack(1) : ic('play'); });
+  a.addEventListener('timeupdate', ()=>{
+    if(isFinite(a.duration)) $id('apSeek').value = a.currentTime / a.duration * 100;
+    $id('apTime').textContent = mmss(a.currentTime) + ' / ' + mmss(a.duration);
+  });
+  const dz = $id('dropzone');
+  ['dragenter','dragover'].forEach(n => dz.addEventListener(n, ev => { ev.preventDefault(); dz.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(n => dz.addEventListener(n, ev => { ev.preventDefault(); dz.classList.remove('drag'); }));
+  dz.addEventListener('drop', ev => pickFile(ev.dataTransfer.files[0]));
+  if(navigator.storage && navigator.storage.persist) navigator.storage.persist();
+}
+
+/* ============================================================
+   UTILITIES
+============================================================ */
+function scrollRow(rowId, dir){
+  const row = document.getElementById(rowId);
+  if(!row) return;
+  row.scrollBy({left: dir * (row.clientWidth * 0.8), behavior:'smooth'});
+}
+function closeOnOverlay(e, id){
+  if(e.target.id === id) document.getElementById(id).classList.remove('active');
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+let toastTimer;
+function toast(msg, type=''){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 2600);
+}
+
+window.addEventListener('scroll', () => {
+  document.getElementById('header').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    closeVideo();
+    ['detailsOverlay','loginOverlay','formOverlay'].forEach(id=>{
+      document.getElementById(id).classList.remove('active');
+    });
+  }
+});
+
+/* Deep link support */
+function handleHash(){
+  const m = location.hash.match(/^#item=(.+)$/);
+  if(m){
+    const item = catalog.find(x => x.id === m[1]);
+    if(item){
+      if(item.type === 'music') playItem(item.id);
+      else openDetails(item.id);
+    }
+  }
+}
+window.addEventListener('hashchange', handleHash);
+
+/* ============================================================
+   INIT
+============================================================ */
+(async function init(){
+  initMedia();
+  loadData();
+  renderAll();
+  goHome();
+  // Prime the admin record reader so openLogin knows first-run vs sign-in
+  if(!adminRecord) adminRecord = null;
+  handleHash();
+})();
+</script>
+</body>
+</html>
